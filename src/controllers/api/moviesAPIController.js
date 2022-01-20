@@ -174,7 +174,6 @@ const moviesAPIController = {
         })    
         .catch(error => res.send(error))
     }
-    
 }
 
 module.exports = moviesAPIController;

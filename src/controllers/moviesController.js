@@ -10,7 +10,7 @@ const fetch = require('node-fetch');
 const Movies = db.Movie;
 const Genres = db.Genre;
 const Actors = db.Actor;
-const API = 'http://www.omdbapi.com/?apikey=b10a383b';
+const ApiUrl = 'http://www.omdbapi.com/?apikey=b10a383b';
 
 const moviesController = {
     'list': (req, res) => {
@@ -27,7 +27,7 @@ const moviesController = {
                 include: ['genre']
             })
             .then(movie => {
-                res.render('moviesDetail.ejs', { movie });
+                res.render('movieDetail.ejs', { movie });
             });
     },
     'new': (req, res) => {
@@ -54,26 +54,6 @@ const moviesController = {
             .then(movies => {
                 res.render('recommendedMovies.ejs', { movies });
             });
-    },
-    //Aqui debo modificar para crear la funcionalidad requerida
-    buscar: async (req, res) => {
-
-        let fetchMovie = await fetch(API + "&t=" + req.body.titulo).then(response => response.json())
-        let movie = [];
-        Movies.findAll()
-            .then(movies => {
-                movies.forEach(element => {
-                    if(element.title.toLowerCase().includes(req.body.titulo.toLowerCase())){
-                        movie.push(element)
-                    }
-                })
-                if(movie.length === 0){
-                    res.render("moviesDetailOmdb", {movie: fetchMovie})
-                }else {
-                    res.render("moviesDetailOmdb", {movie})
-                }
-            })
-
     },
     //Aqui dispongo las rutas para trabajar con el CRUD
     add: function (req, res) {
@@ -154,6 +134,26 @@ const moviesController = {
                 return res.redirect('/movies')
             })
             .catch(error => res.send(error))
+    },
+    buscar: async (req, res) => {
+        let movieFetch = await fetch(ApiUrl + "&t=" + req.body.titulo).then(response => response.json());
+        let moviesSearch = [];
+        Movies.findAll()
+            .then(movies => {
+                movies.forEach(element => {
+                    let movieDb = element.title.toLowerCase();
+                    let movieTitle = req.body.titulo.toLowerCase();
+                    if (movieDb.includes(movieTitle)) {
+                        moviesSearch.push(element);
+                    }
+                })
+                if (moviesSearch.length === 0) {
+                    res.render('moviesDetailOmdb', {movie: movieFetch});
+                }
+                else {
+                    res.render('moviesDetail', { moviesSearch });
+                }
+            })
     }
 }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados</title>
+    <title><%= movie.title %></title>
     <link rel='stylesheet' href='/css/style.css' />
 
 </head>
@@ -11,7 +11,6 @@
     <figure>
         <img src="/img/logo-DH.png" alt="Logo Digital House">
     </figure>
-    <% moviesSearch.forEach(movie => { %>
     <h1><%= movie.title %> </h1>    
     <br>
     <p>CALIFICACIÓN: <%= movie.rating %> </p>
@@ -23,9 +22,6 @@
         <a class="botonModificar" href="/movies/edit/<%= movie.id %>">Modificar</a>
         <a class="botonBorrar" href="/movies/delete/<%= movie.id %>">Borrar</a>
         <a class="botonVolver" href="/movies">Listado de Películas</a>
-    </section>
-    <br>
-    <% }) %>
-    
+    </section> 
 </body>
 </html>
